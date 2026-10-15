@@ -1,0 +1,19 @@
+{
+  "name": "fov-quick-view",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "皮肤视角标定台：把人物转到目标角度并读出全部视角参数，读数可直接抄进 club-party-website 的 SkinModal",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 5174"
+  },
+  "dependencies": {
+    "skinview3d": "3.4.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}

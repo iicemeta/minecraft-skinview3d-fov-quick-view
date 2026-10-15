@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>fov-quick-view · 皮肤视角标定台</title>
+    <!-- 空 data URI：不为一个内部工具画图标，但得把 /favicon.ico 的 404 摁掉 -->
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <header class="top">
+      <h1>fov-quick-view</h1>
+      <p class="sub">
+        把人物转到目标角度 → 复制「读数」→ 发出来即可落到站点弹窗。
+        左侧舞台可切成「站点弹窗尺寸」，取景与真站一致。
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="left">
+        <div class="stage" id="stage">
+          <canvas id="skin-canvas"></canvas>
+          <img class="ref" id="ref-img" alt="参考图" hidden />
+          <p class="hint" id="stage-hint"></p>
+        </div>
+
+        <div class="bar">
+          <div class="seg" id="stage-size">
+            <button type="button" data-stage-size="site" class="on">站点弹窗尺寸</button>
+            <button type="button" data-stage-size="fill">铺满</button>
+          </div>
+          <label class="file">参考图<input id="ref-file" type="file" accept="image/*" /></label>
+          <label class="inline"
+            >叠加
+            <input id="ref-opacity" type="range" min="0" max="100" step="1" value="45" />
+            <output id="ref-opacity-out">45%</output>
+          </label>
+          <label class="inline"><input id="ref-adjust" type="checkbox" /> 调整参考图</label>
+          <output id="ref-scale-out">100%</output>
+          <button type="button" id="ref-reset">复位</button>
+          <button type="button" id="ref-clear">清除</button>
+        </div>
+      </section>
+
+      <aside class="side">
+        <section class="card">
+          <h2>皮肤</h2>
+          <div class="row">
+            <button type="button" id="skin-default">站点默认皮肤</button>
+            <label class="file">本地 PNG<input id="skin-file" type="file" accept="image/png" /></label>
+          </div>
+          <div class="row">
+            <input id="skin-url" type="url" placeholder="https://…/skin.png" />
+            <button type="button" id="skin-url-load">载入</button>
+          </div>
+          <p class="meta" id="skin-meta">—</p>
+        </section>
+
+        <section class="card">
+          <h2>视角</h2>
+          <div class="seg" id="mode">
+            <button type="button" data-mode="player" class="on">拖拽 = 转人物</button>
+            <button type="button" data-mode="camera">拖拽 = 转相机</button>
+          </div>
+          <div class="row">
+            <span class="lbl">人物朝向</span>
+            <input id="yaw-range" type="range" min="-180" max="180" step="0.1" value="0" />
+            <input id="yaw-number" type="number" min="-180" max="180" step="1" value="0" />
+            <span class="unit">°</span>
+          </div>
+          <div class="row fine">
+            <button type="button" data-yaw-step="-5">−5°</button>
+            <button type="button" data-yaw-step="-1">−1°</button>
+            <button type="button" data-yaw-step="-0.1">−0.1°</button>
+            <button type="button" data-yaw-step="0.1">+0.1°</button>
+            <button type="button" data-yaw-step="1">+1°</button>
+            <button type="button" data-yaw-step="5">+5°</button>
+            <button type="button" data-yaw-step="0" id="yaw-zero">归零</button>
+          </div>
+          <div class="row">
+            <span class="lbl">fov / zoom</span>
+            <input id="fov-number" type="number" min="10" max="120" step="1" value="50" />
+            <input id="zoom-number" type="number" min="0.2" max="3" step="0.05" value="0.9" />
+          </div>
+          <p class="meta">站点现在用的是库默认 fov 50 / zoom 0.9（相机距离 43.82）。</p>
+        </section>
+
+        <section class="card">
+          <h2>动作</h2>
+          <div class="grid4" id="animations"></div>
+          <div class="row">
+            <span class="lbl">速度</span>
+            <div class="seg" id="speeds"></div>
+          </div>
+          <div class="row">
+            <label class="inline"><input id="toggle-rotate" type="checkbox" /> 自动旋转</label>
+            <label class="inline"><input id="toggle-pause" type="checkbox" /> 暂停</label>
+            <button type="button" id="reset">重置视角</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>
+            读数
+            <span class="h2-actions">
+              <button type="button" class="primary" id="copy">复制</button>
+              <button type="button" id="snapshot">记一笔</button>
+            </span>
+          </h2>
+          <pre id="readout" class="readout"></pre>
+          <ul class="history" id="history"></ul>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

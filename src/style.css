@@ -1,0 +1,329 @@
+/* 一个纯工具页：浅色中性底 + 等宽读数框。
+   唯一要「像」的东西是左边那块舞台 —— 它得和站点弹窗同一个尺寸口径，
+   否则在这里调好的取景搬过去会变。 */
+
+:root {
+  --bg: #eef0f3;
+  --panel: #fff;
+  --line: #d5d9df;
+  --text: #1d2126;
+  --muted: #6b7280;
+  --accent: #2f6f4f;
+  --accent-soft: #e4f0e9;
+  --code-bg: #1b1f24;
+  --code-fg: #d8e2da;
+  --radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+}
+
+.top {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 20px 10px;
+}
+
+.top h1 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.top .sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: 14px;
+  align-items: start;
+  padding: 0 20px 24px;
+}
+
+@media (max-width: 1080px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------------------------------------------------------------- 舞台 */
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+/* 「站点弹窗尺寸」= SkinModal 的面板 560px 宽、两边各 0.75rem 内边距 → 舞台 536px，
+   高度 min(58vh, 460px)。默认按这个来，取景才和真站一致。 */
+.stage {
+  position: relative;
+  width: min(100%, 536px);
+  height: min(58vh, 460px);
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #fbfcfd, #e7ebef);
+  box-shadow: 0 1px 2px rgb(16 24 40 / 8%);
+}
+
+.stage[data-size='fill'] {
+  width: 100%;
+  height: min(72vh, 720px);
+}
+
+#skin-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  cursor: grab;
+  touch-action: none;
+}
+
+#skin-canvas:active {
+  cursor: grabbing;
+}
+
+/* 参考图：绝对贴合舞台，`object-fit: contain` 保证整张都在，
+   透明度可调 —— 把它压到人物上对齐轮廓，是这工具最好用的部分。 */
+.ref {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.hint {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: min(100%, 536px);
+}
+
+/* ---------------------------------------------------------------- 侧栏 */
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px 12px;
+}
+
+.card h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.h2-actions {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.lbl {
+  flex: 0 0 auto;
+  min-width: 4.6rem;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.unit {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.fine button {
+  min-width: 3.1rem;
+}
+
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.seg {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+button {
+  font: inherit;
+  font-size: 12.5px;
+  padding: 4px 9px;
+  color: var(--text);
+  background: #f6f7f9;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #eceff3;
+}
+
+button.on {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: #b6d5c4;
+  font-weight: 600;
+}
+
+button.primary {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+button.primary:hover {
+  background: #28603f;
+}
+
+input[type='number'],
+input[type='url'] {
+  font: inherit;
+  font-size: 12.5px;
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text);
+}
+
+input[type='number'] {
+  width: 4.6rem;
+}
+
+input[type='url'] {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+input[type='range'] {
+  flex: 1 1 120px;
+  min-width: 90px;
+  accent-color: var(--accent);
+}
+
+input[type='checkbox'] {
+  accent-color: var(--accent);
+}
+
+.file {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  padding: 4px 9px;
+  background: #f6f7f9;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.file input {
+  display: none;
+}
+
+.inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.meta {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------- 读数框 */
+
+.readout {
+  margin: 0;
+  padding: 9px 10px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border-radius: 6px;
+  font: 12px/1.65 ui-monospace, 'Cascadia Mono', Consolas, 'Courier New', monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 15rem;
+  overflow: auto;
+}
+
+.history {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history li button {
+  width: 100%;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
